@@ -1,0 +1,155 @@
+
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+
+
+fun main(args: Array<String>){
+    val client = HttpClient.newBuilder().build()
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create("https://adventofcode.com/2023/day/2/input"))
+        .header("Cookie","_ga=GA1.2.295804623.1701507354; _gid=GA1.2.131787216.1701507354; session=53616c7465645f5fda3577ccfc12109342e8ec2e219ce4ccdc420e56d526eb4f59b00e396a73b67de8c5c4686db7b47d1bd6343dc6c28fd6fd35bce3818065d4; _ga_MHSNPJKWC7=GS1.2.1701511847.2.0.1701511847.0.0.0")
+        .build()
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+    val inputData = response.body()
+    val inputData1 = "two1nine\n" +
+            "eightwothree\n" +
+            "abcone2threexyz\n" +
+            "xtwone3four\n" +
+            "4nineeightseven2\n" +
+            "zoneight234\n" +
+            "7pqrstsixteen"
+    val inputData2 ="Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n" +
+            "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\n" +
+            "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\n" +
+            "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\n" +
+            "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
+    val inputLines =  inputData.split("\n")
+
+
+    Game_02_2(inputLines, true)
+
+}
+fun Game_02_2(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var game = 0
+    inputLines.forEach ({ it ->
+        var possible = true
+        game = game + 1
+        val games = it.split(";")
+        games.forEach({ it2 ->
+            if (!PossibleGame(it2)) { possible= false }
+        })
+        if (possible) {
+            sum = sum + game
+        }
+        if (debug) {
+            println(possible)
+            println(it)
+        }
+
+    })
+    println(sum-game)
+}
+
+fun Game_02(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var game = 0
+    inputLines.forEach ({ it ->
+        var possible = true
+        game = game + 1
+        val games = it.split(";")
+        games.forEach({ it2 ->
+           if (!PossibleGame(it2)) { possible= false }
+            })
+        if (possible) {
+            sum = sum + game
+        }
+        if (debug) {
+            println(possible)
+            println(it)
+        }
+
+    })
+   println(sum-game)
+}
+
+fun PossibleGame(it : String) : Boolean {
+// limit only 12 red cubes, 13 green cubes, and 14 blue
+    if (findCube(it, "red", 12)
+        and findCube(it, "green", 13)
+        and findCube(it, "blue", 14)
+    ) {
+        return true
+    }
+    return false
+}
+
+fun findCube(it: String, color: String, limit: Int): Boolean{
+    val blue = Regex("""(\d*) $color""").find(it)?.value?.split(" ")?.get(0)
+    var blueI= 0
+    if (!(blue.isNullOrEmpty())) {
+        blueI = blue.toInt()
+    }
+    if (blueI <= limit) { return true}
+    return false
+
+}
+
+fun Game_01_2(inputLines: List<String>, debug : Boolean) {
+var sum = 0
+
+    inputLines.forEach({it ->
+        sum = sum + firstNum(it) * 10  + lastNum(it)
+     if (debug) {
+            print(firstNum(it))
+            println(lastNum(it))
+            println(it)
+     }
+    })
+    println(sum)
+}
+
+
+fun firstNum(i: String) : Int
+{
+    var s= i
+// added for second scenario - begin
+    s = s.replace("two","t2o").replace("one","o1e")
+    s = s.replace("three","t3e").replace("four","f4r")
+    s = s.replace("five","f5e").replace("six","s6x")
+    s = s.replace("seven","s7n").replace("eight","e8t").replace("nine","n9e")
+
+// added for second scenario - end
+
+    s.forEach { it ->
+        if (it.isDigit()) {
+            return it.digitToInt()
+        }
+      }
+    return 0
+
+}
+
+fun lastNum(sInput: String) : Int
+{
+    var s= sInput
+
+// added for second scenario - begin
+    s = s.replace("two","t2o").replace("one","o1e")
+    s = s.replace("three","t3e").replace("four","f4r")
+    s = s.replace("five","f5e").replace("six","s6x")
+    s = s.replace("seven","s7n").replace("eight","e8t").replace("nine","n9e")
+
+// added for second scenario - end
+
+    for (i in (0..s.length-1).reversed()) {
+        if (s[i].isDigit()) {
+            return s[i].digitToInt()
+        }
+    }
+    return 0
+
+}
