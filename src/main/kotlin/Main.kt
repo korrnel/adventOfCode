@@ -32,26 +32,60 @@ fun main(args: Array<String>){
     Game_02_2(inputLines, true)
 
 }
+object Balls {
+    var blue = 0
+    var red = 0
+    var green = 0
+}
+
+
 fun Game_02_2(inputLines: List<String>, debug : Boolean) {
     var sum = 0
     var game = 0
-    inputLines.forEach ({ it ->
-        var possible = true
-        game = game + 1
+    var minBall = Balls
+
+    inputLines.forEach { it ->
         val games = it.split(";")
-        games.forEach({ it2 ->
-            if (!PossibleGame(it2)) { possible= false }
-        })
-        if (possible) {
-            sum = sum + game
+        minBall.blue = 0
+        minBall.red = 0
+        minBall.green = 0
+        games.forEach { it2 ->
+            minBall = minBalls(minBall, it2)
         }
         if (debug) {
-            println(possible)
+            println(minBall.blue * minBall.green * minBall.red)
+            println(minBall.blue.toString() + " " + minBall.green.toString() + " " + minBall.red.toString())
             println(it)
         }
+        sum = sum + minBall.blue * minBall.green * minBall.red
 
-    })
-    println(sum-game)
+    }
+    println(sum)
+}
+
+fun minBalls(minBall : Balls, it: String ): Balls{
+    var inBalls = minBall
+    val red = findCube2(it, "red")
+    val green =  findCube2(it, "green")
+    val blue =  findCube2(it, "blue")
+
+    if (inBalls.red < red ) inBalls.red=red
+    if (inBalls.green < green ) inBalls.green=green
+    if (inBalls.blue < blue ) inBalls.blue=blue
+
+    return inBalls
+}
+
+
+fun findCube2(it: String, color: String): Int{
+    val blue = Regex("""(\d*) $color""").find(it)?.value?.split(" ")?.get(0)
+    var blueI= 0
+    if (!(blue.isNullOrEmpty())) {
+        blueI = blue.toInt()
+        return blueI
+    }
+    return 0
+
 }
 
 fun Game_02(inputLines: List<String>, debug : Boolean) {
