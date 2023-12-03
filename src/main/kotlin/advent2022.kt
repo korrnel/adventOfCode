@@ -20,11 +20,11 @@ val inputData3 = "vJrwpWtwJgWrhcsFMMfFFhFp\n" +
         "ttgJtRGJQctTZtZT\n" +
         "CrZsJsPPZsGzwwsLwLmpwMDw"
   val inputLines =  inputData.split("\n")
-  Game_03_2(inputLines, true)
+  Game_2022_03_2(inputLines, true)
 }
 
 
-fun Game_03_2(inputLines: List<String>, debug : Boolean) {
+fun Game_2022_03_2(inputLines: List<String>, debug : Boolean) {
     var sum = 0
 
     for (i in 0..inputLines.size-2 step 3)
@@ -74,7 +74,7 @@ fun commonChar2(a: String, b : String, c : String): Char{
     println("----")
     return ' '
 }
-fun Game_03(inputLines: List<String>, debug : Boolean) {
+fun Game_2022_03(inputLines: List<String>, debug : Boolean) {
     var sum = 0
 
     inputLines.forEach { it ->

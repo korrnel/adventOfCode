@@ -8,7 +8,7 @@ import java.net.http.HttpResponse
 fun main(args: Array<String>){
     val client = HttpClient.newBuilder().build()
     val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://adventofcode.com/2023/day/2/input"))
+        .uri(URI.create("https://adventofcode.com/2023/day/3/input"))
         .header("Cookie","_ga=GA1.2.295804623.1701507354; _gid=GA1.2.131787216.1701507354; session=53616c7465645f5fda3577ccfc12109342e8ec2e219ce4ccdc420e56d526eb4f59b00e396a73b67de8c5c4686db7b47d1bd6343dc6c28fd6fd35bce3818065d4; _ga_MHSNPJKWC7=GS1.2.1701511847.2.0.1701511847.0.0.0")
         .build()
     val response = client.send(request, HttpResponse.BodyHandlers.ofString())
@@ -26,18 +26,114 @@ fun main(args: Array<String>){
             "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\n" +
             "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\n" +
             "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
+    var inputData3 ="467..114...\n" +
+            "...*......\n" +
+            "..35..633.\n" +
+            "......#...\n" +
+            "617*......\n" +
+            ".....+.58.\n" +
+            "..592.....\n" +
+            "......755.\n" +
+            "...\$.*....\n" +
+            ".664.598..\n" +
+            "."
+    val inputData4 ="....123\n" +
+            "...*......\n" +
+            "..35..633.\n" +
+            "......#...\n" +
+            "617*......\n" +
+            ".....+.58.\n" +
+            "..592.....\n" +
+            "......755.\n" +
+            "...\$.*....\n" +
+            ".664.598..\n" +
+            "."
     val inputLines =  inputData.split("\n")
-
-
-    Game_02_2(inputLines, true)
-
+    Game_03(inputLines, true)
 }
+
+
+
+fun Game_03(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var alreadyIn : IntArray = intArrayOf()
+
+    inputLines.forEachIndexed { i, it ->
+        var number = ""
+        var start = -1
+        it.forEachIndexed() { j, it2 ->
+
+                if ((it2.isDigit())) {
+                    if (start < 0) {
+                        start = j
+                    }
+                    number = number + it2
+                }
+               if (!(it2.isDigit()) or (j==it.length-1)) {
+                    if (start > -1) {
+                        if (debug) {
+                            print("at line" + i + " -- " + number)
+                        }
+                        if (isAPart(i, start, j, inputLines)) {
+                            if (debug) {
+                                print(" - PART ")
+                            }
+                            sum = sum + number.toInt()
+
+                        }
+                        start = -1
+                        number = ""
+                        if (debug) {
+                            println(" ")
+                        }
+                    }
+                }
+
+        }
+        if (debug) {
+            println(sum)
+        }
+    }
+    println(sum)
+    println(alreadyIn.size)
+
+    // 526868 is bad since it doesn't consider the numbers at the end
+    // 528547??
+    // 327344
+}
+fun isAPart(line : Int, colStart: Int, colEnd: Int, lineList : List<String>):Boolean
+{
+
+    var startLine = if (line<1) line else line - 1
+    var startColumn = if (colStart<1) colStart else colStart-1
+    var endColumn = if (lineList[line].length-1==colEnd) colEnd-1 else colEnd
+    if (line>0)
+    {
+        for (i in startColumn..endColumn ){
+         if(!((lineList[startLine][i].isDigit()) or (lineList[startLine][i]=='.')))
+          { return true }
+        }
+    }
+
+    for (i in startColumn..endColumn ){
+        if(!((lineList[line][i].isDigit()) or (lineList[line][i]=='.')))
+        { return true }
+    }
+
+    if (lineList.size-2>line) {
+        for (i in startColumn..endColumn ){
+            if(!((lineList[line+1][i].isDigit()) or (lineList[line+1][i]=='.')))
+            { return true }
+        }
+    }
+    return false
+}
+
 object Balls {
     var blue = 0
     var red = 0
     var green = 0
 }
-
 
 fun Game_02_2(inputLines: List<String>, debug : Boolean) {
     var sum = 0
