@@ -26,7 +26,8 @@ fun main(args: Array<String>){
             "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\n" +
             "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\n" +
             "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
-    var inputData3 ="467..114...\n" +
+    var inputData3 =
+            "467..114...\n" +
             "...*......\n" +
             "..35..633.\n" +
             "......#...\n" +
@@ -36,23 +37,85 @@ fun main(args: Array<String>){
             "......755.\n" +
             "...\$.*....\n" +
             ".664.598..\n" +
-            "."
-    val inputData4 ="....123\n" +
-            "...*......\n" +
-            "..35..633.\n" +
-            "......#...\n" +
-            "617*......\n" +
-            ".....+.58.\n" +
-            "..592.....\n" +
-            "......755.\n" +
-            "...\$.*....\n" +
-            ".664.598..\n" +
-            "."
+            ""
     val inputLines =  inputData.split("\n")
-    Game_03(inputLines, true)
+    Game_03_02(inputLines, true)
 }
 
+data class FoundOne(
+    val number : String,
+    val area : Set<Pair<Int, Int>>
+)
 
+fun Game_03_02(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var numbers = mutableListOf<FoundOne>()
+    // collect numbers
+    inputLines.forEachIndexed { i, it ->
+        var number = ""
+        var start = -1
+        it.forEachIndexed() { j, it2 ->
+            if ((it2.isDigit())) {
+                if (start < 0) {
+                    start = j
+                }
+                number = number + it2
+            }
+            if (!(it2.isDigit()) or (j == it.length - 1)) {
+                if (start > -1) {
+                    numbers.add(FoundOne(number, getArea(i,j,number)))
+                    if (debug) {
+                        println("at line" + i + " -- " + number)
+                    }
+                    number=""
+                    start= -1
+                }
+            }
+        }
+    }
+    // numbers collected
+    inputLines.forEachIndexed { i, it ->
+        var partialPower = 1
+        it.forEachIndexed() { j, it2 ->
+            if (it2.equals('*')) {
+              val whereIm  = setOf(Pair(i,j))
+              println(i.toString() + "-" + j.toString()+ " Near")
+                var Found = mutableListOf<Int>()
+                numbers.forEach { item ->
+                  if(item.area.intersect(whereIm).isNotEmpty()) {
+                      Found.add(item.number.toInt())
+                      if (debug) {
+                          println(item.number + " Has found ")
+                      }
+
+                   }
+                }
+                if (Found.size==2) sum = sum + Found[0]*Found[1]
+                if (debug) {
+                    println(sum)
+                }
+
+            }
+        }
+        //sum = sum + partialPower
+    }
+    println(sum)
+}
+
+fun getArea(row : Int, column :Int , number : String) : MutableSet<Pair<Int, Int>>
+{
+    var result = mutableSetOf<Pair<Int, Int>>()
+    val delta = 1
+    for (j in row-delta..row+delta)
+    {
+        for (i in column-delta-number.length..column  ){
+            result.add(Pair(j,i))
+         //   println(j.toString() + " " + i.toString() + "  - "  + number)
+        }
+
+    }
+    return result
+}
 
 fun Game_03(inputLines: List<String>, debug : Boolean) {
     var sum = 0
