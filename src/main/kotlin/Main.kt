@@ -86,7 +86,7 @@ fun Game_05_01(inputLines: List<String>, debug : Boolean) {
 
     var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines )
     seeds.forEach({
-        println("$it corresponds to "+ seedToSoil[it].toString())
+        println("$it corresponds to - "+ seedToSoil[it].toString())
     })
     println(seeds)
 }
