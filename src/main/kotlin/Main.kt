@@ -8,7 +8,7 @@ import java.net.http.HttpResponse
 fun main(args: Array<String>){
     val client = HttpClient.newBuilder().build()
     val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://adventofcode.com/2023/day/3/input"))
+        .uri(URI.create("https://adventofcode.com/2023/day/5/input"))
         .header("Cookie","_ga=GA1.2.295804623.1701507354; _gid=GA1.2.131787216.1701507354; session=53616c7465645f5fda3577ccfc12109342e8ec2e219ce4ccdc420e56d526eb4f59b00e396a73b67de8c5c4686db7b47d1bd6343dc6c28fd6fd35bce3818065d4; _ga_MHSNPJKWC7=GS1.2.1701511847.2.0.1701511847.0.0.0")
         .build()
     val response = client.send(request, HttpResponse.BodyHandlers.ofString())
@@ -38,8 +38,131 @@ fun main(args: Array<String>){
             "...\$.*....\n" +
             ".664.598..\n" +
             ""
-    val inputLines =  inputData.split("\n")
-    Game_03_02(inputLines, true)
+    var inputData4= "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53\n" +
+            "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19\n" +
+            "Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1\n" +
+            "Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83\n" +
+            "Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36\n" +
+            "Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
+    var inputData5= "seeds: 79 14 55 13\n" +
+            "\n" +
+            "seed-to-soil map:\n" +
+            "50 98 2\n" +
+            "52 50 48\n" +
+            "\n" +
+            "soil-to-fertilizer map:\n" +
+            "0 15 37\n" +
+            "37 52 2\n" +
+            "39 0 15\n" +
+            "\n" +
+            "fertilizer-to-water map:\n" +
+            "49 53 8\n" +
+            "0 11 42\n" +
+            "42 0 7\n" +
+            "57 7 4\n" +
+            "\n" +
+            "water-to-light map:\n" +
+            "88 18 7\n" +
+            "18 25 70\n" +
+            "\n" +
+            "light-to-temperature map:\n" +
+            "45 77 23\n" +
+            "81 45 19\n" +
+            "68 64 13\n" +
+            "\n" +
+            "temperature-to-humidity map:\n" +
+            "0 69 1\n" +
+            "1 0 69\n" +
+            "\n" +
+            "humidity-to-location map:\n" +
+            "60 56 37\n" +
+            "56 93 4"
+    val inputLines =  inputData5.split("\n")
+    Game_05_01(inputLines, true)
+}
+fun Game_05_01(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
+
+    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines )
+    seeds.forEach({
+        println("$it corresponds to "+ seedToSoil[it].toString())
+    })
+    println(seeds)
+}
+fun mapper (from : String, to : String,inputLines : List<String>) : MutableMap<Long,Long> {
+    var seedToSoil = mutableMapOf<Long,Long>()
+    for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
+        val range1 =(inputLines.get(i).split(" "))
+        for (j in 0..range1[2].toLong()-1) {
+            seedToSoil[(range1[1].toLong()+j)]=(range1[0].toLong()+j)
+        }
+        println(inputLines.get(i).split(" "))
+    }
+ return seedToSoil
+}
+fun Game_04_02(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var cards = mutableListOf<Int>()
+// init
+    inputLines.forEachIndexed { row, it ->
+     cards.add(row, 1)
+    }
+    // collect numbers
+    inputLines.forEachIndexed { row, it ->
+        var numbers = mutableListOf<String>()
+        for (i in it.indexOf(':')+2..it.indexOf('|')-1 step 3 ) {
+            // println(" -"+ it.substring(i)+ "-")
+            // println(" -"+ it.substring(i,i + 2)+ "-")
+            numbers.add(it.substring(i,i+2).trim())
+        }
+        var found = 0
+        for (i in it.indexOf('|')+2..it.length-1 step 3 ) {
+            // println(" -"+ it.substring(i)+ "-")
+            // println(" -"+ it.substring(i,i + 2)+ "-")
+            if (numbers.contains(it.substring(i,i+2).trim())) found = found + 1
+
+        }
+
+//        println(found+1)
+  //      sum = sum + 1
+        if (found>0) {
+           for (j in (1..found)){
+               cards.set((row+j),cards.get(row+j)+1*cards.get(row))
+           }
+        }
+        println(cards.get(row))
+        sum = sum + cards.get(row)
+      //  println(sum)
+
+    }
+
+    println(sum)
+}
+fun Game_04_01(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+
+    // collect numbers
+    inputLines.forEachIndexed { i, it ->
+        var numbers = mutableListOf<String>()
+        for (i in it.indexOf(':')+2..it.indexOf('|')-1 step 3 ) {
+           // println(" -"+ it.substring(i)+ "-")
+           // println(" -"+ it.substring(i,i + 2)+ "-")
+            numbers.add(it.substring(i,i+2).trim())
+
+        }
+        var found = -1
+        for (i in it.indexOf('|')+2..it.length-1 step 3 ) {
+            // println(" -"+ it.substring(i)+ "-")
+            // println(" -"+ it.substring(i,i + 2)+ "-")
+            if (numbers.contains(it.substring(i,i+2).trim())) found = found + 1
+
+        }
+        if (found>-1) sum = sum + Math.pow(2.0,found.toDouble()).toInt()
+        println(sum)
+
+    }
+    println(sum)
 }
 
 data class FoundOne(
