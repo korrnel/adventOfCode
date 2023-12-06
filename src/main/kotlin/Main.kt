@@ -1,4 +1,5 @@
 
+import org.jetbrains.kotlin.js.translate.utils.splitToRanges
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -86,8 +87,10 @@ fun Game_05_02(inputLines: List<String>, debug : Boolean) {
     val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
     for (k in 0..seeds.size-1 step(2))
     {
-        //println(seeds[k])
+        println(seeds[k].toString())
+        println(seeds[k+1].toString())
         for (j in 0..seeds[k+1]-1){
+
             var i = mapperAlt ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines, seeds[k]+j)
             if (debug) print((seeds[k]+j).toString() + " corresponds to - "+ i.toString())
             i = mapperAlt("soil-to-fertilizer map:" ,"fertilizer-to-water map:",inputLines, i )
@@ -105,7 +108,6 @@ fun Game_05_02(inputLines: List<String>, debug : Boolean) {
             if (debug) println(i.toString())
 
         }
-        println(k.toString())
     }
 //    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines)
     println(min(locations))
@@ -149,7 +151,7 @@ fun min(locations: MutableList<Long>) :String {
 }
 fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : Long {
 
-   for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
+        for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
         val range1 =(inputLines.get(i).split(" "))
         // println(inputLines.get(i).split(" "))
         if ((inp-range1[1].toLong())>=0 && (inp-range1[1].toLong()<=range1[2].toLong()))
@@ -163,7 +165,7 @@ fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : 
 }
 
 fun mapperAltLast(from : String,inputLines : List<String>,inp : Long) : Long {
-    var seedToSoil = mutableMapOf<Long,Long>()
+    //var seedToSoil = mutableMapOf<Long,Long>()
     for (i  in inputLines.indexOf(from)+1..inputLines.size-2){
         val range1 =(inputLines.get(i).split(" "))
         if ((inp-range1[1].toLong())>0 && (inp-range1[1].toLong()<range1[2].toLong()))
