@@ -78,8 +78,40 @@ fun main(args: Array<String>){
             "60 56 37\n" +
             "56 93 4"
     val inputLines =  inputData.split("\n")
-    Game_05_01(inputLines, true)
+    Game_05_02(inputLines, false)
 }
+fun Game_05_02(inputLines: List<String>, debug : Boolean) {
+    var sum = 0
+    var locations = mutableListOf<Long>()
+    val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
+    for (k in 0..seeds.size-1 step(2))
+    {
+        //println(seeds[k])
+        for (j in 0..seeds[k+1]-1){
+            var i = mapperAlt ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines, seeds[k]+j)
+            if (debug) print((seeds[k]+j).toString() + " corresponds to - "+ i.toString())
+            i = mapperAlt("soil-to-fertilizer map:" ,"fertilizer-to-water map:",inputLines, i )
+            if (debug) print(" - "+ i.toString() + " - ")
+            i = mapperAlt ("fertilizer-to-water map:" ,"water-to-light map:",inputLines,i )
+            if (debug) print(i.toString() + " - ")
+            i = mapperAlt ("water-to-light map:" ,"light-to-temperature map:",inputLines,i )
+            if (debug) print(i.toString() + " - ")
+            i = mapperAlt ("light-to-temperature map:" ,"temperature-to-humidity map:",inputLines ,i)
+            if (debug) print(i.toString() + " - ")
+            i = mapperAlt ("temperature-to-humidity map:","humidity-to-location map:",inputLines ,i)
+            if (debug) print(i.toString() + " - ")
+            i = mapperAltLast ("humidity-to-location map:",inputLines,i )
+            locations.add(i)
+            if (debug) println(i.toString())
+
+        }
+        println(k.toString())
+    }
+//    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines)
+    println(min(locations))
+}
+
+
 fun Game_05_01(inputLines: List<String>, debug : Boolean) {
     var sum = 0
     val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
@@ -116,10 +148,11 @@ fun min(locations: MutableList<Long>) :String {
     return i.toString()
 }
 fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : Long {
-    for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
+
+   for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
         val range1 =(inputLines.get(i).split(" "))
         // println(inputLines.get(i).split(" "))
-        if ((inp-range1[1].toLong())>0 && (inp-range1[1].toLong()<range1[2].toLong()))
+        if ((inp-range1[1].toLong())>=0 && (inp-range1[1].toLong()<=range1[2].toLong()))
          { return range1[0].toLong()+inp-range1[1].toLong() }
     //    for (j in 0..range1[2].toLong()-1) {
     //        if (inp == (range1[1].toLong() + j)) return (range1[0].toLong() + j)
