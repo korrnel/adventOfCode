@@ -77,29 +77,66 @@ fun main(args: Array<String>){
             "humidity-to-location map:\n" +
             "60 56 37\n" +
             "56 93 4"
-    val inputLines =  inputData5.split("\n")
+    val inputLines =  inputData.split("\n")
     Game_05_01(inputLines, true)
 }
 fun Game_05_01(inputLines: List<String>, debug : Boolean) {
     var sum = 0
-    var seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
+    val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
 
-    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines )
+//    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines)
+
+    var locations = mutableListOf<Long>()
     seeds.forEach({
-        println("$it corresponds to - "+ seedToSoil[it].toString())
+        var i = mapperAlt ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines, it)
+        print("$it corresponds to - "+ i.toString())
+        i = mapperAlt("soil-to-fertilizer map:" ,"fertilizer-to-water map:",inputLines, i )
+        print(" - "+ i.toString() + " - ")
+        i = mapperAlt ("fertilizer-to-water map:" ,"water-to-light map:",inputLines,i )
+        print(i.toString() + " - ")
+        i = mapperAlt ("water-to-light map:" ,"light-to-temperature map:",inputLines,i )
+print(i.toString() + " - ")
+         i = mapperAlt ("light-to-temperature map:" ,"temperature-to-humidity map:",inputLines ,i)
+        print(i.toString() + " - ")
+         i = mapperAlt ("temperature-to-humidity map:","humidity-to-location map:",inputLines ,i)
+        print(i.toString() + " - ")
+         i = mapperAltLast ("humidity-to-location map:",inputLines,i )
+        locations.add(i)
+        println(i.toString())
     })
-    println(seeds)
+
+   println(min(locations))
 }
-fun mapper (from : String, to : String,inputLines : List<String>) : MutableMap<Long,Long> {
-    var seedToSoil = mutableMapOf<Long,Long>()
+
+fun min(locations: MutableList<Long>) :String {
+    var i = Long.MAX_VALUE
+    locations.forEach { it ->
+        if (it<i) {i=it }
+    }
+    return i.toString()
+}
+fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : Long {
     for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
         val range1 =(inputLines.get(i).split(" "))
+        // println(inputLines.get(i).split(" "))
         for (j in 0..range1[2].toLong()-1) {
-            seedToSoil[(range1[1].toLong()+j)]=(range1[0].toLong()+j)
+            if (inp==(range1[1].toLong()+j)) return (range1[0].toLong()+j)
         }
-        println(inputLines.get(i).split(" "))
+
     }
- return seedToSoil
+    return inp
+}
+
+fun mapperAltLast(from : String,inputLines : List<String>,inp : Long) : Long {
+    var seedToSoil = mutableMapOf<Long,Long>()
+    for (i  in inputLines.indexOf(from)+1..inputLines.size-1){
+        val range1 =(inputLines.get(i).split(" "))
+        for (j in 0..range1[2].toLong()-1) {
+            if (inp==range1[1].toLong()+j) return range1[0].toLong()+j
+        }
+        //println(inputLines.get(i).split(" "))
+    }
+    return inp
 }
 fun Game_04_02(inputLines: List<String>, debug : Boolean) {
     var sum = 0
