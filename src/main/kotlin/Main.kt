@@ -119,9 +119,11 @@ fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : 
     for (i in inputLines.indexOf(from)+1..inputLines.indexOf(to)-2){
         val range1 =(inputLines.get(i).split(" "))
         // println(inputLines.get(i).split(" "))
-        for (j in 0..range1[2].toLong()-1) {
-            if (inp==(range1[1].toLong()+j)) return (range1[0].toLong()+j)
-        }
+        if ((inp-range1[1].toLong())>0 && (inp-range1[1].toLong()<range1[2].toLong()))
+         { return range1[0].toLong()+inp-range1[1].toLong() }
+    //    for (j in 0..range1[2].toLong()-1) {
+    //        if (inp == (range1[1].toLong() + j)) return (range1[0].toLong() + j)
+    //    }
 
     }
     return inp
@@ -129,11 +131,14 @@ fun mapperAlt (from : String, to : String,inputLines : List<String>,inp:Long) : 
 
 fun mapperAltLast(from : String,inputLines : List<String>,inp : Long) : Long {
     var seedToSoil = mutableMapOf<Long,Long>()
-    for (i  in inputLines.indexOf(from)+1..inputLines.size-1){
+    for (i  in inputLines.indexOf(from)+1..inputLines.size-2){
         val range1 =(inputLines.get(i).split(" "))
-        for (j in 0..range1[2].toLong()-1) {
-            if (inp==range1[1].toLong()+j) return range1[0].toLong()+j
-        }
+        if ((inp-range1[1].toLong())>0 && (inp-range1[1].toLong()<range1[2].toLong()))
+        { return range1[0].toLong()+inp-range1[1].toLong() }
+
+//        for (j in 0..range1[2].toLong()-1) {
+//            if (inp==range1[1].toLong()+j) return range1[0].toLong()+j
+ //       }
         //println(inputLines.get(i).split(" "))
     }
     return inp
