@@ -85,7 +85,7 @@ fun Game_05_02(inputLines: List<String>, debug : Boolean) {
     var sum = 0
     var locations = mutableListOf<Long>()
     val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
-    for (k in 0..seeds.size-1 step(2))
+    for (k in 0..seeds.size-1 step(2))  // it takes forever :(
     {
         println(seeds[k].toString())
         println(seeds[k+1].toString())
