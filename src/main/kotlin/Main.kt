@@ -9,7 +9,7 @@ import java.net.http.HttpResponse
 fun main(args: Array<String>){
     val client = HttpClient.newBuilder().build()
     val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://adventofcode.com/2023/day/5/input"))
+        .uri(URI.create("https://adventofcode.com/2023/day/9/input"))
         .header("Cookie","_ga=GA1.2.295804623.1701507354; _gid=GA1.2.131787216.1701507354; session=53616c7465645f5fda3577ccfc12109342e8ec2e219ce4ccdc420e56d526eb4f59b00e396a73b67de8c5c4686db7b47d1bd6343dc6c28fd6fd35bce3818065d4; _ga_MHSNPJKWC7=GS1.2.1701511847.2.0.1701511847.0.0.0")
         .build()
     val response = client.send(request, HttpResponse.BodyHandlers.ofString())
@@ -78,10 +78,98 @@ fun main(args: Array<String>){
             "humidity-to-location map:\n" +
             "60 56 37\n" +
             "56 93 4"
-    val inputLines =  inputData.split("\n")
-    Game_05_02(inputLines, false)
+    val inputData7 = "32T3K 765\n" +
+                 "T55J5 684\n" +
+                 "KK677 28\n" +
+                 "KTJJT 220\n" +
+                 "QQQJA 483"
+    val inputData9 = "0 3 6 9 12 15\n" +
+            "1 3 6 10 15 21\n" +
+            "10 13 16 21 30 45"
+    val inputLines =  inputData.trim().split("\n")
+
+
+    Game_09_02(inputLines, true)
 }
-fun Game_05_02(inputLines: List<String>, debug : Boolean) {
+
+
+fun Game_09_02(inputLines: List<String>, debug : Boolean) {
+    var sum : Long = 0
+    inputLines.forEach({it ->
+        val numbers = it.split(" ").map { it.toLong() }
+        for (i in 0..numbers.size-1)
+        {
+            if (debug)          print(" " +(numbers.get(i)))
+
+        }
+        if (debug)      println()
+        val x = moveUp(numbers)
+        if (debug)     println(x)
+        sum=sum + numbers.first()+x*-1
+        println(sum.toString() + " - " + numbers.first()+ " " + x.toString())
+    })
+    println(sum)
+}
+
+fun moveUp(numbers : List<Long>): Long{
+    var numbers2 = mutableListOf<Long>()
+    var max: Long =0
+    for (i in 1..numbers.size-1)
+    {
+        numbers2.add(numbers.get(i)-numbers.get(i-1))
+        print(" " + (numbers.get(i)-numbers.get(i-1)))
+    }
+    println()
+    if (numbers2.min()!=0L || numbers2.max()!=0L) {
+        max = moveUp(numbers2)
+    }
+    // println(max.toString() + " <---")
+    return (numbers2.first()+max*-1)
+}
+fun Game_09_01(inputLines: List<String>, debug : Boolean) {
+    var sum : Long = 0
+    inputLines.forEach({it ->
+        val numbers = it.split(" ").map { it.toLong() }
+        for (i in 0..numbers.size-1)
+        {
+            if (debug)          print(" " +(numbers.get(i)))
+
+        }
+        if (debug)      println()
+        val x = moveDown(numbers)
+        if (debug)     println(x)
+        sum=sum + numbers.last()+x
+        println(sum.toString() + " - " + numbers.last()+ " " + x.toString())
+    })
+    println(sum)
+}
+
+fun moveDown(numbers : List<Long>): Long{
+    var numbers2 = mutableListOf<Long>()
+    var max: Long =0
+    for (i in 1..numbers.size-1)
+    {
+        numbers2.add(numbers.get(i)-numbers.get(i-1))
+        print(" " + (numbers.get(i)-numbers.get(i-1)))
+    }
+    println()
+    if (numbers2.min()!=0L || numbers2.max()!=0L) {
+       max = moveDown(numbers2)
+    }
+   // println(max.toString() + " <---")
+    return (numbers2.last()+max)
+}
+fun Game_07_01(inputLines: List<String>, debug : Boolean) {
+    val strength  = listOf( 'A','K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3',  '2')
+    println(strength)
+    inputLines.forEach({it ->
+        print("d")
+        })
+//    var locations = mutableListOf<Long>()
+//    val hands = inputLines[].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
+
+}
+    fun Game_05_02(inputLines: List<String>, debug : Boolean) {
     var sum = 0
     var locations = mutableListOf<Long>()
     val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
