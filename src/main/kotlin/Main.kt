@@ -87,8 +87,6 @@ fun main(args: Array<String>){
             "1 3 6 10 15 21\n" +
             "10 13 16 21 30 45"
     val inputLines =  inputData.trim().split("\n")
-
-
     Game_09_02(inputLines, true)
 }
 
