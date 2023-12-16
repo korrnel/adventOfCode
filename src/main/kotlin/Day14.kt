@@ -26,11 +26,12 @@ fun main(args: Array<String>) {
             "#....###..\n" +
             "#....#...."
         println( Day14.Game_01(inputData.trim().split("\n"),false))
+        println( Day14.Game_02(inputData.trim().split("\n"),false))
 }
 
 class Day14 {
     companion object {
-        fun Game_01(inputLines: List<String>, debug: Boolean) : Int {
+        fun Game_02(inputLines: List<String>, debug: Boolean) : Int {
             val newGrid = MutableList(inputLines.size) { MutableList(inputLines[0].length) { ' ' } }
             println(inputLines)
             for (row in 0 until inputLines.size) {
@@ -39,9 +40,90 @@ class Day14 {
                 }
             }
             println(newGrid)
+            var ordered = newGrid
+            for (i in 1..1000) {
+
+             ordered = orderThem(ordered,debug) // North
+             ordered = rotateItCounter(ordered,debug)
+             ordered = orderThem(ordered,debug) // West
+             ordered = rotateItCounter(ordered,debug)
+             ordered = orderThem(ordered,debug) // south
+             ordered = rotateItCounter(ordered,debug)
+             ordered = orderThem(ordered,debug) // east
+             ordered = rotateItCounter(ordered,debug)
+                println(i.toString() + " " + sumIt(ordered,debug))
+                /*
+                *  after a few rounds the sum is repeating,
+                *  in the example is after the 5th  and 7 length cycles so
+                *  ( 1000000000 - 5 ) mod 7 = 1 so the second element of the pattern
+                *
+                * 65
+                * 64 <---
+                * 65
+                * 63
+                * 68
+                * 69
+                * 69
+                *
+                *  in the input it's repeating after the 152th and 17 is the length or the pattern
+                * ( 1000000000 - 152 ) mod 17 = 8 so the 9th element of the pattern
+                * 89106
+                * 89078
+                * 89047
+                * 89048
+                * 89048
+                * 89044
+                * 89049
+                * 89058
+                * 89089 <---
+                * 89119
+                * 89150
+                * 89173
+                * 89170
+                * 89160
+                * 89171
+                * 89167
+                * 89133
+                *
+                * */
+
+            }
+            //    println(ordered)
+            return sumIt(ordered,debug)
+
+        }
+        fun rotateItCounter(inputLines: MutableList<MutableList<Char>>,debug: Boolean ) : MutableList<MutableList<Char>>{
+            val newGrid = MutableList(inputLines[0].size) { MutableList(inputLines.size) { ' ' } }
+            if (debug) println(inputLines)
+            // transpose
+            for (row in 0 until newGrid.size) {
+                for (col in 0 until newGrid.size) {
+                 newGrid[row][col]=inputLines[col][row]
+                //newGrid[inputLines[0].size-row-1][inputLines.size-col-1] = inputLines[row][col]
+                }
+            }
+            val newGrid2 = MutableList(newGrid.size) { MutableList(newGrid[0].size) { ' ' } }
+            // reverse
+            for (row in 0 until newGrid.size) {
+                for (col in 0 until newGrid.size) {
+                    newGrid2[row][col]=newGrid[row][newGrid.size-col-1]
+
+                }
+            }
+            return  newGrid2
+        }
+        fun Game_01(inputLines: List<String>, debug: Boolean) : Int {
+            val newGrid = MutableList(inputLines.size) { MutableList(inputLines[0].length) { ' ' } }
+            if (debug) println(inputLines)
+            for (row in 0 until inputLines.size) {
+                for (col in 0 until inputLines[0].length) {
+                    newGrid[row][col] = inputLines[row][col]
+                }
+            }
+            if (debug) println(newGrid)
             var ordered = orderThem(newGrid,debug)
-            println(ordered)
-            return sumIt(ordered,true)
+            if (debug) println(ordered)
+            return sumIt(ordered,debug)
 
         }
         fun orderThem(data: MutableList<MutableList<Char>>,debug: Boolean ) : MutableList<MutableList<Char>>{
