@@ -15,12 +15,44 @@ fun main(args: Array<String>) {
                         ".|....-|.\\\n" +
                         "..//.|...."
         println( Day16.Game_01(inputData.trim().split("\n"),false))
+        println( Day16.Game_02(inputData.trim().split("\n"),false))
+
 }
 
 class Day16 {
     companion object {
+    var energized = mutableListOf<MutableList<Int>>()
 
-        var energized = mutableListOf<MutableList<Int>>()
+        fun Game_02(inputLines: List<String>, debug: Boolean) : Int {
+            println(inputLines)
+            var results = mutableListOf<Int>()
+            // from top
+            for (i in 0..inputLines.size-1) {
+                energized = MutableList(inputLines.size) { MutableList(inputLines[0].length) { 0 } }
+                Beam(inputLines, 0, i, 3)
+                results.add(energized.sumOf { it.count({ it > 0 }) })
+            }
+            // from bottom
+            for (i in 0..inputLines.size-1) {
+                energized = MutableList(inputLines.size) { MutableList(inputLines[0].length) { 0 } }
+                Beam(inputLines, inputLines[0].length-1,0, 1)
+                results.add(energized.sumOf { it.count({ it > 0 }) })
+            }
+            // from left
+            for (i in 0..inputLines[0].length-1) {
+                energized = MutableList(inputLines.size) { MutableList(inputLines[0].length) { 0 } }
+                Beam(inputLines,  i,0, 2)
+                results.add(energized.sumOf { it.count({ it > 0 }) })
+            }
+            // from right
+            for (i in 0..inputLines[0].length-1) {
+                energized = MutableList(inputLines.size) { MutableList(inputLines[0].length) { 0 } }
+                Beam(inputLines,i, inputLines.size-1, 4)
+                results.add(energized.sumOf { it.count({ it > 0 }) })
+            }
+            println(results)
+            return  results.max()
+        }
         fun Game_01(inputLines: List<String>, debug: Boolean) : Int {
             energized = MutableList(inputLines.size) { MutableList(inputLines[0].length) { 0 } }
             println(inputLines)
@@ -34,7 +66,7 @@ class Day16 {
 
         }
 
-        private fun Beam(inputLines : List<String>, rowIn: Int, colIn: Int, directionIn: Int): Int {
+        fun Beam(inputLines : List<String>, rowIn: Int, colIn: Int, directionIn: Int): Int {
             var row = rowIn
             var col = colIn
             var direction = directionIn
