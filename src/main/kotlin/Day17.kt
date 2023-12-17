@@ -47,17 +47,19 @@ class Day17 {
             val q = PriorityQueue<State>(compareBy { it.cost })
             q.offer(State(0, 0, 0, -1))
             val costs = mutableMapOf<Triple<Int, Int, Int>, Int>()
+// GO
             while (q.isNotEmpty()) {
 //                println(q)
                 val (cost, x, y, dd) = q.poll()
                 if (x == map.size - 1 && y == map[0].size - 1) {
+                    if (debug) println(costs.size)
                     return cost // destination
                 }
 
                 for (direction in 0 until 4) {
                     var costIncrease = 0
                     if (direction == dd || (direction + 2) % 4 == dd) {
-                        continue
+                        continue // we cannot go further the same way , since the limits
                     }
 
                     for (distance in 1..maxdist) {
@@ -78,7 +80,7 @@ class Day17 {
                             }
                             costs[newState] = nc
                             q.offer(State(nc, xx, yy, direction))
-                            println(nc.toString() + " " +  xx.toString() + " " +  yy.toString() + " ")
+                            if (debug) println(nc.toString() + " " +  xx.toString() + " " +  yy.toString() + " ")
 
                         }
                     }
