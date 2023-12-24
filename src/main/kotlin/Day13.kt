@@ -112,9 +112,11 @@ class Day13 {
             }
             val newGrid3 = mutableListOf<String>()
             for (row in 0 until newGrid2.size) {
-             newGrid3.add(newGrid2[row].toString())
+                var s : String = ""
+                for (col in 0 until newGrid2[0].size)  s=s+newGrid2[row][col]
+                newGrid3.add(s)
             }
-                return  newGrid3
+            return  newGrid3
         }
 
 }
