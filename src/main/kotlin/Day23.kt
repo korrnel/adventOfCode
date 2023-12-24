@@ -30,7 +30,10 @@ fun main(args: Array<String>) {
                             "#.....###...###...#...#\n" +
                             "#####################.#"
         println( Day23.Game_01(inputData.trim(),1,1,false))
-
+    // this will fail. the map shold be recreated as nodes first when there's alternate routes
+        println( Day23.Game_01(inputData.replace('>','.')
+            .replace('<','.').replace('v','.').replace('^','.')
+            .trim(),1,1,false))
 }
 
 class Day23 {
