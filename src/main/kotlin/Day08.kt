@@ -83,7 +83,7 @@ class Day08 {
 
             return  steps
         }
-        fun Game_02(inputLines: String, debug: Boolean): Int {
+        fun Game_02(inputLines: String, debug: Boolean): Long {
             // init
             var lines = inputLines.split("\n")
             val direction = lines[0]
@@ -102,6 +102,7 @@ class Day08 {
             positions.forEach { it->
              cycles.add(navigateGhost(it,direction))
             }
+            if (debug) println(cycles)
             // so find where they will meet?
             return findLeastCommonMultiple(cycles)
         }
@@ -127,10 +128,10 @@ class Day08 {
             //println(steps)
             return steps
         }
-        fun findLeastCommonMultiple(numbers : List<Int>): Int {
-            val larger = numbers.max()
+        fun findLeastCommonMultiple(numbers : List<Int>): Long {
+            val larger = numbers.max().toLong()
 
-            var maxLcm = 1
+            var maxLcm = 1L
             numbers.forEach { maxLcm *= it }
 
             var lcm = larger
@@ -142,8 +143,8 @@ class Day08 {
             }
             return maxLcm
         }
-        fun divide(lcm: Int , numbers: List<Int>) : Boolean {
-            var fraction = 0
+        fun divide(lcm: Long, numbers: List<Int>) : Boolean {
+            var fraction = 0L
             numbers.forEach { fraction += lcm % it }
             return  fraction<1
         }
