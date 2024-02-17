@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(4)
+    val inputData = Common.getData(4,args[0])
 
     var inputData1 = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53\n" +
             "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19\n" +
@@ -20,6 +20,7 @@ class Day04 {
     companion object {
 
     fun Game_04_02(inputLines: List<String>, debug: Boolean) : Int {
+        // for each winnig card the next one counts as double
         var sum = 0
         var cards = mutableListOf<Int>()
         var extraCards = mutableListOf<Int>()
@@ -69,11 +70,13 @@ class Day04 {
             return ans
         }
 
-            fun Game_04_01(inputLines: List<String>, debug: Boolean): Int {
+        fun Game_04_01(inputLines: List<String>, debug: Boolean): Int {
+
         var sum = 0
         // collect numbers
         inputLines.forEachIndexed { i, it ->
             var numbers = mutableListOf<String>()
+            // the first is the winning numbers
             for (i in it.indexOf(':') + 2..it.indexOf('|') - 1 step 3) {
                 // println(" -"+ it.substring(i)+ "-")
                 // println(" -"+ it.substring(i,i + 2)+ "-")
@@ -81,12 +84,14 @@ class Day04 {
 
             }
             var found = -1
+            // the second set is the numbers i have
             for (i in it.indexOf('|') + 2..it.length - 1 step 3) {
                 // println(" -"+ it.substring(i)+ "-")
                 // println(" -"+ it.substring(i,i + 2)+ "-")
                 if (numbers.contains(it.substring(i, i + 2).trim())) found = found + 1
 
             }
+            // how many are a match?
             if (found > -1) sum = sum + Math.pow(2.0, found.toDouble()).toInt()
             if (debug) println(sum)
 

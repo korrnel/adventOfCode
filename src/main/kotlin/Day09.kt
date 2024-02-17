@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(9)
+    val inputData = Common.getData(9, args[0])
 
 
     val inputData1 = "0 3 6 9 12 15\n" +

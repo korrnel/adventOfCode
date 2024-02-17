@@ -1,6 +1,7 @@
 
 import java.util.PriorityQueue
 
+// to check the processing time
 fun <T>timing(block: () -> T) {
     val start = System.currentTimeMillis()
     try {
@@ -12,7 +13,7 @@ fun <T>timing(block: () -> T) {
 }
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(5)
+    val inputData = Common.getData(5, args[0])
 
 
     var inputData1 = "seeds: 79 14 55 13\n" +
@@ -48,10 +49,12 @@ fun main(args: Array<String>) {
             "humidity-to-location map:\n" +
             "60 56 37\n" +
             "56 93 4"
+ // for first seeds mapped, to locations and the closest location is needed to be found
 
     timing {
         println(Day05.Game_01(inputData1.split("\n"),false))
     }
+    // in the second the same but the input is not seed numbers but seed ranges , so more seeds to be examined
     timing {
         println(Day05.Game_02(inputData1.split("\n"),false))
     }
@@ -279,12 +282,14 @@ class Day05 {
 
     fun Game_01(inputLines: List<String>, debug: Boolean) : Long {
         var sum = 0
+        // collect the seeds
         val seeds = inputLines[0].split("seeds: ")[1].run { split(" ").map { it.toLong() } }
 
 //    var seedToSoil = mapper ("seed-to-soil map:" ,"soil-to-fertilizer map:",inputLines)
 
+        // go trough all the mappings
         var locations = mutableListOf<Long>()
-        seeds.forEach({
+        seeds.forEach {
             var i = mapperAlt("seed-to-soil map:", "soil-to-fertilizer map:", inputLines, it)
             if (debug) print("$it corresponds to - " + i.toString())
             i = mapperAlt("soil-to-fertilizer map:", "fertilizer-to-water map:", inputLines, i)
@@ -299,9 +304,10 @@ class Day05 {
             if (debug) print(i.toString() + " - ")
             i = mapperAltLast("humidity-to-location map:", inputLines, i)
             locations.add(i)
-            if (debug)  println(i.toString())
-        })
+            if (debug) println(i.toString())
+        }
 
+        // find the closest  location where a seed can be planted
         return locations.min()
     }
 

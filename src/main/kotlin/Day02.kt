@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(2)
+    val inputData = Common.getData(2, args[0])
 
 
     val inputData1 ="Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n" +
@@ -27,7 +27,7 @@ class Day02 {
             var sum = 0
             var game = 0
             var minBall = Balls
-
+        // this time find out the min of balls needed, for the game (multiple scenarios are in a line/game)
             inputLines.forEach { it ->
                 val games = it.split(";")
                 minBall.blue = 0
@@ -41,6 +41,7 @@ class Day02 {
                     println(minBall.blue.toString() + " " + minBall.green.toString() + " " + minBall.red.toString())
                     println(it)
                 }
+                // and the min balls will be the target of the sum
                 sum = sum + minBall.blue * minBall.green * minBall.red
 
             }
@@ -75,27 +76,32 @@ class Day02 {
         fun Game_02(inputLines: List<String>, debug : Boolean) {
             var sum = 0
             var game = 0
-            inputLines.forEach ({ it ->
+            inputLines.forEach { it ->
                 var possible = true
-                game = game + 1
+                game += 1
                 val games = it.split(";")
-                games.forEach({ it2 ->
-                    if (!PossibleGame(it2)) { possible= false }
-                })
+                games.forEach { it2 ->
+                    // valid scenario?
+                    if (!PossibleGame(it2)) {
+                        possible = false
+                    }
+                }
+                // this game is possible? then count as possible
                 if (possible) {
-                    sum = sum + game
+                    sum += game
                 }
                 if (debug) {
                     println(possible)
                     println(it)
                 }
 
-            })
+            }
+            // the last game is added twice
             println(sum-game)
         }
 
         fun PossibleGame(it : String) : Boolean {
-// limit only 12 red cubes, 13 green cubes, and 14 blue
+            //  only 12 red cubes, 13 green cubes, and 14 blue are valid games, if there's more drop it
             if (findCube(it, "red", 12)
                 and findCube(it, "green", 13)
                 and findCube(it, "blue", 14)

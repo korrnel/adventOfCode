@@ -1,7 +1,6 @@
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(3)
-
+    val inputData = Common.getData(3, args[0])
 
     var inputData1 =
         "467..114...\n" +
@@ -28,6 +27,7 @@ class Day03 {
             val area: Set<Pair<Int, Int>>
         )
     fun Game_03_02(inputLines: List<String>, debug : Boolean) {
+        // find the numbers connected with an asterix * and multiply them
         var sum = 0
         var numbers = mutableListOf<FoundOne>()
         // collect numbers
@@ -62,6 +62,7 @@ class Day03 {
                     println(i.toString() + "-" + j.toString()+ " Near")
                     var Found = mutableListOf<Int>()
                     numbers.forEach { item ->
+
                         if(item.area.intersect(whereIm).isNotEmpty()) {
                             Found.add(item.number.toInt())
                             if (debug) {
@@ -70,6 +71,7 @@ class Day03 {
 
                         }
                     }
+                    // if two numbers are linked by an * then add them
                     if (Found.size==2) sum = sum + Found[0]*Found[1]
                     if (debug) {
                         println(sum)
@@ -98,12 +100,15 @@ class Day03 {
     }
 
     fun Game_03(inputLines: List<String>, debug : Boolean) {
+        // part 1 find the numbers next to a symbol
+
         var sum = 0
         var alreadyIn : IntArray = intArrayOf()
 
         inputLines.forEachIndexed { i, it ->
             var number = ""
             var start = -1
+            // find the numbers
             it.forEachIndexed() { j, it2 ->
 
                 if ((it2.isDigit())) {
@@ -112,11 +117,13 @@ class Day03 {
                     }
                     number = number + it2
                 }
+
                 if (!(it2.isDigit()) or (j==it.length-1)) {
                     if (start > -1) {
                         if (debug) {
                             print("at line" + i + " -- " + number)
                         }
+                        // is near a symbol
                         if (isAPart(i, start, j, inputLines)) {
                             if (debug) {
                                 print(" - PART ")
@@ -140,13 +147,13 @@ class Day03 {
         println(sum)
         println(alreadyIn.size)
 
-        // 526868 is bad since it doesn't consider the numbers at the end
-        // 528547??
-        // 327344
+        // 526868 is bad since it doesn't consider the numbers at the end of the lines
+
+        // 521601 is the solution
     }
     fun isAPart(line : Int, colStart: Int, colEnd: Int, lineList : List<String>):Boolean
     {
-
+        // seek the number's surroundings  for a symbol
         var startLine = if (line<1) line else line - 1
         var startColumn = if (colStart<1) colStart else colStart-1
         var endColumn = if (lineList[line].length-1==colEnd) colEnd-1 else colEnd

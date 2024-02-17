@@ -2,7 +2,7 @@ import kotlin.math.abs
 
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(11)
+    val inputData = Common.getData(11, args[0])
 
 
     var inputData1 =

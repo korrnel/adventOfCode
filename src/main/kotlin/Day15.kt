@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(15)
+    val inputData = Common.getData(15, args[0])
 
 
     var inputData1 =

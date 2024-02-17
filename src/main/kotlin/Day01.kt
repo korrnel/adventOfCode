@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-        val inputData = Common.getData(1)
+        val inputData = Common.getData(1, args[0])
 
         val inputData1 = "1abc2\n" +
                 "pqr3stu8vwx\n" +
@@ -16,33 +16,35 @@ fun main(args: Array<String>) {
     println(Day01.Game_01_01(inputData1.split("\n"),false))
     println(Day01.Game_01_02(inputData2.split("\n"),false))
 
-        println(Day01.Game_01_01(inputData.split("\n"),false))
-        println(Day01.Game_01_02(inputData.split("\n"),false))
+    println(Day01.Game_01_01(inputData.split("\n"),false))
+    println(Day01.Game_01_02(inputData.split("\n"),false))
     }
 class Day01 {
     companion object {
     fun Game_01_01(inputLines: List<String>, debug : Boolean):Int {
         var sum = 0
-
-        inputLines.forEach({it ->
+        // find the first and last numbers in the line
+        inputLines.forEach {it ->
+            // sum them up
             sum = sum + firstNum1(it) * 10  + lastNum1(it)
             if (debug) {
                 println(firstNum1(it)*10+lastNum1(it))
-          //      println(it)
             }
-        })
+        }
+
         return sum
     }
         fun Game_01_02(inputLines: List<String>, debug: Boolean): Int {
             var sum = 0
-
-            inputLines.forEach({ it ->
+            // first and last numbers, but they can be in written format also
+            inputLines.forEach { it ->
+                // sum them up
                 sum = sum + firstNum(it) * 10 + lastNum(it)
                 if (debug) {
                     println(firstNum(it)*10+lastNum(it))
                     //println(it)
                 }
-            })
+            }
             return sum
         }
 

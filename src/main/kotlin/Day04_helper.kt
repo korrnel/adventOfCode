@@ -20,9 +20,9 @@ data class ScratchCard(val id: Int, val haveNumbers: Set<Int>, val winNumbers: S
         }
 }
 
-fun main() {
+fun main(args: Array<String>) {
     var data = mutableListOf<ScratchCard>()
-    val data2 = Common.getData(4)
+    val data2 = Common.getData(4, args[0])
     data2.trim().split("\n").forEach{ line ->
         val line2 = line.replace("  "," ")
         val (card, contents) = line2.split(":")

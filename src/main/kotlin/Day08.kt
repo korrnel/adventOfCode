@@ -1,7 +1,7 @@
 
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(8)
+    val inputData = Common.getData(8, args[0])
 
 
     var inputData1 = "RL\n" +
@@ -29,13 +29,13 @@ fun main(args: Array<String>) {
             "22Z = (22B, 22B)\n" +
             "XXX = (XXX, XXX)"
     timing {
-        println(Day08.Game_01(inputData1.trim(),true))
+        println(Day08.Game_01(inputData1.trim(),false))
     }
     timing {
-        println(Day08.Game_01(inputData2.trim(),true))
+        println(Day08.Game_01(inputData2.trim(),false))
     }
     timing {
-        println(Day08.Game_01(inputData.trim(),true))
+        println("first solution " + Day08.Game_01(inputData.trim(),false).toString())
     }
     timing {
         println(Day08.Game_02(inputData3.trim(),true))
@@ -55,7 +55,7 @@ class Day08 {
             // init
             var lines = inputLines.split("\n")
             val direction = lines[0]
-            println(direction)
+            if (debug) println(direction)
             val nodeRegex = Regex("""^(\w{3}) = \((\w{3}), (\w{3})\)$""")
             lines = lines.drop(2)
             lines.forEach {
@@ -63,17 +63,22 @@ class Day08 {
                 nodes.put(node,Pair(left,right))
             }
             // start the wandering
-
             var postion= "AAA"
             var steps = 0
             var step= 0
             do {
                 if (step>=direction.length) step=0
-                if (direction[step]=='L') {postion = nodes.get(postion)!!.first}
-                    else {postion = nodes.get(postion)!!.second}
+
+                // left or right node to follow?
+                postion = if (direction[step]=='L') {
+                    nodes.get(postion)!!.first
+                } else {
+                    nodes.get(postion)!!.second
+                }
 
                 step++
                 steps++
+                // leave if finally on the ZZZ
             } while (postion!="ZZZ")
 
             return  steps
@@ -82,7 +87,7 @@ class Day08 {
             // init
             var lines = inputLines.split("\n")
             val direction = lines[0]
-            println(direction)
+            if (debug) println(direction)
             val nodeRegex = Regex("""^(\w{3}) = \((\w{3}), (\w{3})\)$""")
             lines = lines.drop(2)
             var positions= mutableListOf<String>()
@@ -91,11 +96,13 @@ class Day08 {
                 nodes.put(node,Pair(left,right))
                 if (node.endsWith('A')) positions.add(node)
             }
+            // each wondering repeates from A to Z and Z to A and so on...
             var cycles = mutableListOf<Int>()
-            // start the wandering
+            // start the wandering all the points ending with A
             positions.forEach { it->
              cycles.add(navigateGhost(it,direction))
             }
+            // so find where they will meet?
             return findLeastCommonMultiple(cycles)
         }
         fun navigateGhost(inputPosition: String,direction : String):Int{
@@ -103,24 +110,24 @@ class Day08 {
             var steps = 0
             var step = 0
             var count = 0
-            println(inputPosition)
+            // println(inputPosition)
             do {
                 if (step >= direction.length) step=0
                 if (direction[step]=='L') {postion = nodes.get(postion)!!.first}
                 else {postion = nodes.get(postion)!!.second}
                 step++
                 steps++
+
+                // we have arrived
                 if (postion.endsWith('Z') ) {
-                    println(steps)
+              //      println(steps)
                     count++
                 }
             } while (count<1)
-            println(steps)
+            //println(steps)
             return steps
         }
         fun findLeastCommonMultiple(numbers : List<Int>): Int {
-
-
             val larger = numbers.max()
 
             var maxLcm = 1

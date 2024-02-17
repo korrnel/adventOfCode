@@ -1,12 +1,12 @@
 
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(6)
+    val inputData = Common.getData(6, args[0])
 
 
     var inputData1 = "Time:      7  15   30\n" +
             "Distance:  9  40  200"
-
+// race first 3 race , second concat the numbers and one race
     timing {
         println(Day06.Game_01(inputData1.trim(),true))
     }

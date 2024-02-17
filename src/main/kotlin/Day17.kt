@@ -2,7 +2,7 @@ import java.util.*
 
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(17)
+    val inputData = Common.getData(17, args[0])
 
 
     var inputData1 =
