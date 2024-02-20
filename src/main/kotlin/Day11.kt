@@ -2,7 +2,7 @@ import kotlin.math.abs
 
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(11, args[0])
+    val inputData = Common.getData(11, if (args.size>0) args.get(0) else "dev")
 
 
     var inputData1 =
@@ -17,12 +17,12 @@ fun main(args: Array<String>) {
                 ".......#..\n" +
                 "#...#....."
 
-
+// find the distance between the galaxies , but they can expend
     println(Day11.Game_01(inputData.trim(),true)) // 9521776
     println(Day11.Game_02(inputData1.trim(),1,true))
     println(Day11.Game_02(inputData1.trim(),10-1,true))
     println(Day11.Game_02(inputData1.trim(),100-1,true))
-    println(Day11.Game_02(inputData.trim(),1000000-1,true))
+    println(Day11.Game_02(inputData.trim(),1000000-1,true)) // 553224415344
 }
 
 class Day11 {
@@ -66,6 +66,8 @@ class Day11 {
         return  sum
     }
 
+
+
         private fun distance(pair: Pair<Long, Long>, pair1: Pair<Long, Long>):Long {
             return abs(pair.first-pair1.first) + abs(pair.second-pair1.second)
         }
@@ -95,6 +97,8 @@ class Day11 {
             }
             return  pairs
         }
+
+        // find the galaxies pairs
         fun findPairs(galaxy: List<String>) : MutableList<Pair<Long, Long>>{
             var pairs  = mutableListOf<Pair<Long, Long>>()
             for (row in 0 until galaxy.size) {
@@ -104,6 +108,8 @@ class Day11 {
             }
             return  pairs
         }
+
+        // expand with more than one row
         fun expand2(galaxy: List<String>, dir:Int): MutableList<String>{
             var expandedY= mutableListOf<String>()
 
@@ -119,6 +125,8 @@ class Day11 {
             }
             return  expandedY
         }
+
+        // expand the galaxies empty rows
         fun expand(galaxy: List<String>): MutableList<String>{
             var expandedY= mutableListOf<String>()
 
@@ -131,6 +139,8 @@ class Day11 {
             }
             return  expandedY
         }
+
+        // since the expansion is needed to be writed only once
         fun rotateItClockwise(inputLines: List<String>,debug: Boolean ) : MutableList<String>
         {
             val newGrid = MutableList(inputLines[0].length) { MutableList(inputLines.size) { ' ' } }

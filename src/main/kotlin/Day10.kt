@@ -50,161 +50,169 @@ fun main(args: Array<String>) {
     // Day10.Game_10_01(inputData1.split("\n"),false)
 
     println( Day10.Game_01(inputData.split("\n"),false))
-    println( Day10.Game_02(inputData2.split("\n"),false))
-    println( Day10.Game_02(inputData3.split("\n"),false))
-    println( Day10.Game_02(inputData4.split("\n"),false))
-    println( Day10.Game_02(inputData5.split("\n"),false))
+    println( Day10.Game_02(inputData.split("\n"),false))
 
 }
 
 class Day10 {
     companion object {
-    var visitedPositions = mutableListOf<Pair<Int,Int>>()
-        fun Game_02(inputLines: List<String>, debug: Boolean):Int {
+        var visitedPositions = mutableListOf<Pair<Int, Int>>()
+        var map = MutableList(1) { MutableList(1) { '0' } }
+
+        fun Game_02(inputLines: List<String>, debug: Boolean): Int {
             // init if needed
             //println(visitedPositions)
-            init(inputLines,debug)
-        // init
-            val map = MutableList(inputLines.size) { MutableList(inputLines[0].length) { '0' } }
-            for (y in 0 until inputLines.size) {
-                    for (x in 0 until inputLines[y].length) {
-                        if (!visitedPositions.contains(Pair(x,y))) {
-                            map[y][x] = if (isIn(inputLines,Pair(x,y))) { '1' } else { '0' }
-                        } else {
-                            // if it is a border than it is not counts
-                            map[y][x] = inputLines[y][x]
-                        }
-                    }
-            }
+            // init
+            init(inputLines, debug)
+            map = MutableList(inputLines.size) { MutableList(inputLines[0].length) { '0' } }
 
+            // clear the map to only the ones visible
+            for (y in 0 until inputLines.size) {
+                for (x in 0 until inputLines[y].length) {
+                    if (visitedPositions.contains(Pair(x, y))) {
+                        map[y][x] = inputLines[y][x]
+                    }
+                }
+            }
+            // now check they are in or out
+            for (y in 0 until inputLines.size) {
+                for (x in 0 until inputLines[y].length) {
+                    if (!visitedPositions.contains(Pair(x, y)) && isIn(Pair(x, y))) {
+                        map[y][x] = '1'
+                    }
+                }
+            }
             println(map)
             return 1
         }
 
         // ray trace,
-    fun isIn(inputLines: List<String>,pos: Pair<Int,Int>) : Boolean{
-        if (visitedPositions.contains(pos)) return false
+        fun isIn(pos: Pair<Int, Int>): Boolean {
+            if (visitedPositions.contains(pos)) return false
             // we have to count the border crossings
             var borders = 0
-        for (i in pos.first .. 0 ) {
-            if (inputLines[pos.second][i] in setOf<Char>('L','J','7','F','-') ) borders+=1
+            for (i in pos.first..0) {
+                if (map[pos.second][i] in setOf<Char>('L', 'J', '|')) borders += 1
+            }
+            // if the border corossing is odd so we are int
+            return borders % 2 == 1
         }
-        // if the border corossing is odd so we are int
-        return borders % 2 == 1
-    }
-    fun init(inputLines: List<String>, debug: Boolean){
-        visitedPositions = mutableListOf<Pair<Int,Int>>()
-        // find the starting poision
-        var pos = findS(inputLines)?:Pair(0,0)
-        visitedPositions.add(pos)
-        println(pos)
-        // first move
-        pos = Pair(pos.first,pos.second+1) // this has to be a legit step
-        var direction: Int = 1
-        /*
+
+        fun init(inputLines: List<String>, debug: Boolean) {
+            visitedPositions = mutableListOf<Pair<Int, Int>>()
+            // find the starting poision
+            var pos = findS(inputLines) ?: Pair(0, 0)
+            visitedPositions.add(pos)
+            println(pos)
+            // first move
+            pos = Pair(pos.first, pos.second - 1) // this has to be a legit step
+            var direction: Int = 1
+            /*
          1 up
          2 down
          3 left
          4 right
          */
 //    println(inputLines)
-        // moving around
-        while (visitedPositions.get(0)!=pos) {
-            //  sum = sum + 1
-            //   println(inputLines[positionY][positionX])
-            when (inputLines[pos.second][pos.first]) {
-                '|' -> {
-                    when (direction) {
-                        1 -> pos = Pair(pos.first,pos.second - 1)
-                        2 -> pos = Pair(pos.first,pos.second + 1)
-                    }
-                }
-
-                '-' -> {
-                    when (direction) {
-                        3 -> pos = Pair(pos.first-1,pos.second)
-                        4 -> pos = Pair(pos.first+1,pos.second)
-                    }
-                }
-
-                'L' -> {
-                    when (direction) {
-                        2 -> {
-                            pos = Pair(pos.first+1,pos.second)
-                            direction = 4
-                        }
-
-                        3 -> {
-                            pos = Pair(pos.first,pos.second - 1)
-                            direction = 1
+            // moving around
+            while (visitedPositions.get(0) != pos) {
+                //  sum = sum + 1
+                //   println(inputLines[positionY][positionX])
+                when (inputLines[pos.second][pos.first]) {
+                    '|' -> {
+                        when (direction) {
+                            1 -> pos = Pair(pos.first, pos.second - 1)
+                            2 -> pos = Pair(pos.first, pos.second + 1)
                         }
                     }
-                }
 
-                'J' -> {
-                    when (direction) {
-                        2 -> {
-                            pos = Pair(pos.first-1,pos.second)
-                            direction = 3
+                    '-' -> {
+                        when (direction) {
+                            3 -> pos = Pair(pos.first - 1, pos.second)
+                            4 -> pos = Pair(pos.first + 1, pos.second)
                         }
+                    }
 
-                        4 -> {
-                            pos = Pair(pos.first,pos.second - 1)
-                            direction = 1
+                    'L' -> {
+                        when (direction) {
+                            2 -> {
+                                pos = Pair(pos.first + 1, pos.second)
+                                direction = 4
+                            }
+
+                            3 -> {
+                                pos = Pair(pos.first, pos.second - 1)
+                                direction = 1
+                            }
+                        }
+                    }
+
+                    'J' -> {
+                        when (direction) {
+                            2 -> {
+                                pos = Pair(pos.first - 1, pos.second)
+                                direction = 3
+                            }
+
+                            4 -> {
+                                pos = Pair(pos.first, pos.second - 1)
+                                direction = 1
+                            }
+                        }
+                    }
+
+                    'F' -> {
+                        when (direction) {
+                            1 -> {
+                                pos = Pair(pos.first + 1, pos.second)
+                                direction = 4
+                            }
+
+                            3 -> {
+                                pos = Pair(pos.first, pos.second + 1)
+                                direction = 2
+                            }
+                        }
+                    }
+
+                    '7' -> {
+                        when (direction) {
+                            1 -> {
+                                pos = Pair(pos.first - 1, pos.second)
+                                direction = 3
+                            }
+
+                            4 -> {
+                                pos = Pair(pos.first, pos.second + 1)
+                                direction = 2
+                            }
                         }
                     }
                 }
+                visitedPositions.add(pos)
+                // this is the full circle length
+                if (debug) println(visitedPositions.size)
+            }
 
-                'F' -> {
-                    when (direction) {
-                        1 -> {
-                            pos = Pair(pos.first+1,pos.second)
-                            direction = 4
-                        }
+        }
 
-                        3 -> {
-                            pos = Pair(pos.first,pos.second+1)
-                            direction = 2
-                        }
-                    }
-                }
+        fun Game_01(inputLines: List<String>, debug: Boolean): Int {
+            // the furthest you can get, the half of the circle
+            init(inputLines, debug)
+            return ((visitedPositions.size + 1) / 2)
+        }
 
-                '7' -> {
-                    when (direction) {
-                        1 -> {
-                            pos = Pair(pos.first-1,pos.second)
-                            direction = 3
-                        }
-
-                        4 -> {
-                            pos = Pair(pos.first,pos.second + 1)
-                            direction = 2
-                        }
+        fun findS(inputLines: List<String>): Pair<Int, Int>? {
+            inputLines.forEachIndexed { y, it ->
+                it.forEachIndexed { x, it2 ->
+                    if (it2.equals('S')) {
+                        return Pair(x, y)
                     }
                 }
             }
-            visitedPositions.add(pos)
-            // this is the full circle length
-            if (debug) println(visitedPositions.size)
+            return null
         }
 
     }
-    fun Game_01(inputLines: List<String>, debug: Boolean):Int {
-        // the furthest you can get, the half of the circle
-        init(inputLines,debug)
-        return ((visitedPositions.size + 1) / 2)
-    }
 
-    fun findS(inputLines: List<String>): Pair<Int, Int>? {
-        inputLines.forEachIndexed { y, it ->
-            it.forEachIndexed { x, it2 ->
-                if (it2.equals('S')) {
-                    return Pair(x,y)
-                }
-            }
-        }
-        return null
-    }
-
-}
 }

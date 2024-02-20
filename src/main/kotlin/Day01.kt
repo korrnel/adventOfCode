@@ -1,6 +1,6 @@
 fun main(args: Array<String>) {
 
-        val inputData = Common.getData(1, args[0])
+        val inputData = Common.getData(1, if (args.size>0) args.get(0) else "dev")
 
         val inputData1 = "1abc2\n" +
                 "pqr3stu8vwx\n" +
