@@ -16,11 +16,11 @@ class Common {
             val json = configFile.readText()
          return  Gson().fromJson(json, Config::class.java)
         }
-         fun getData (day: Int, s: String) : String {
+         fun getData (day: Int, s: String,year: String = "2023") : String {
              val env = loadConfig(s)
             val client = HttpClient.newBuilder().build()
             val request = HttpRequest.newBuilder()
-                .uri(URI.create("https://adventofcode.com/2023/day/"+ day.toString() + "/input"))
+                .uri(URI.create("https://adventofcode.com/"+ year +"/day/"+ day.toString() + "/input"))
                 .header("Cookie", env?.Cookie ?: "")
                 .build()
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
