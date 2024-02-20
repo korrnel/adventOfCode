@@ -44,16 +44,18 @@ class Day02 {
             var  sum= 0
 
             // A rock 1 , B paper 2 , C scissor 3
+            // I have to
             // x lose   , y draw    ,Z win
             sum += if (hand.second=='X') 0 else 0
             sum += if (hand.second=='Y') 3 else 0
             sum += if (hand.second=='Z') 6 else 0
 
             val games = mapOf(
+    // playin against rock
                 Pair('A','X') to 3,
                 Pair('A','Y') to 1,
                 Pair('A','Z') to 2,
-
+    // playin against paper
                 Pair('B','X') to 1,
                 Pair('B','Y') to 2,
                 Pair('B','Z') to 3,
