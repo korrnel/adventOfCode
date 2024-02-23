@@ -20,26 +20,31 @@ fun  main(args: Array<String>) {
     println( Day05.Game_01(inputData1, false))
     println( Day05.Game_01(inputData, false))
 
+    println( Day05.Game_02(inputData1, false))
+    println( Day05.Game_02(inputData, false))
+
 }
 class Day05 {
     companion object {
-        fun Game_01(inputLines: String, debug: Boolean): String {
-            var sum = ""
+        fun getCrates(cratesInput2: List<String>): MutableList<MutableList<Char>> {
             var crates = mutableListOf(mutableListOf<Char>())
-            var cratesInput= inputLines.split("\n\n").get(0).split("\n")
-            cratesInput = cratesInput.slice(0..cratesInput.size-2)
-            if (!debug) println(cratesInput)
+
+            var cratesInput = cratesInput2.slice(0..cratesInput2.size-2)
             // parse crates
             cratesInput.forEach {
                 var stack=0
-                if (debug) println(it)
                 for (i in 1..it.length step (4)) {
                     if (crates[stack].isNullOrEmpty()) crates.add(mutableListOf<Char>())
                     if (it[i]!=' ') crates[stack].add(it[i])
                     stack++
                 }
             }
-            if (debug) println(crates)
+            return crates
+        }
+        fun Game_01(inputLines: String, debug: Boolean): String {
+            var sum = ""
+            // var crates = mutableListOf(mutableListOf<Char>())
+            var crates = getCrates(inputLines.split("\n\n").get(0).split("\n"))
 
             // get the steps
             var movingInput= inputLines.split("\n\n").get(1).trim().split("\n")
@@ -50,7 +55,7 @@ class Day05 {
                 val (count,from, to) = matchResult.destructured
                 if (debug) println(count + " " + from + " " + to )
                 if (debug) println(crates)
-
+                // move it one by one
                 for (i in 1 .. count.toInt()) {
                     try {
                         if (debug) println(count + " " + from + " " + to )
@@ -72,5 +77,32 @@ class Day05 {
             }
             return sum
         }
+        fun Game_02(inputLines: String, debug: Boolean): String {
+            var sum = ""
+            // var crates = mutableListOf(mutableListOf<Char>())
+            var crates = getCrates(inputLines.split("\n\n").get(0).split("\n"))
+
+            // get the steps
+            var movingInput= inputLines.split("\n\n").get(1).trim().split("\n")
+            val regex= "move\\s(\\d+)\\sfrom\\s(\\d+)\\sto\\s(\\d+)".toRegex()
+
+            movingInput.forEach {
+                val matchResult = regex.find(it)!!
+                val (count,from, to) = matchResult.destructured
+                // move it once
+                for (i in (1 .. count.toInt()).reversed()) {
+                    crates[to.toInt()-1].addFirst(crates[from.toInt()-1].removeAt(i-1))
+                }
+            }
+            crates.forEach {
+                try {
+                    sum += it.first()
+                } catch (e:NoSuchElementException) {
+                    sum += " "
+                }
+            }
+            return sum
+        }
+
     }
 }
