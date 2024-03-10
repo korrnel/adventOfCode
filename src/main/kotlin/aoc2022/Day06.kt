@@ -36,7 +36,7 @@ class Day06 {
             s.forEach { if (!ret.contains(it)) ret+= it }
             return  ret
         }
-        fun Game_01(inputLines: String, debug: Boolean,slice: Int): Int {
+        fun Game_01(inputLines: String, debug: Boolean, slice: Int): Int {
 
             for (i in 0 until inputLines.length-slice) {
                 if (distinct(inputLines.substring(i,i+slice)).length==slice) return i+slice
