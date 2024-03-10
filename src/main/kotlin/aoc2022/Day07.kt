@@ -32,15 +32,20 @@ fun  main(args: Array<String>) {
             "5626152 d.ext\n" +
             "7214296 k"
 
-// part 1  - 4 distinct char
-    println( Day07.Game_01(inputData1.trim().split("\n"), false,4))
-    println( Day07.Game_01(inputData.trim().split("\n"), false,4))
+// part 1  - sum of dirs
+    println( Day07.Game_01(inputData1.trim().split("\n"), false))
+    println( Day07.Game_01(inputData.trim().split("\n"), false))
 
-//
+// part 1  - sum of dirs
+    println( Day07.Game_02(inputData1.trim().split("\n"), false))
+    println( Day07.Game_02(inputData.trim().split("\n"), false))
+
 }
 class Day07 {
     companion object {
-        const val SIZE_PARAM = 1_000_000
+        const val SIZE_PARAM = 100_000
+        const val TOTAL_DISK = 70_000_000
+        const val FREE_SPACE_NEEDED= 30_000_000
         data class Node(val NodeId : UUID, val parent: UUID?,val parentName : String?, val name: String, var size: Long, val type : NodeType, val depth : Int) {
             enum class NodeType {
                 DIRECTORY,
@@ -93,44 +98,60 @@ class Day07 {
             return sum
         }
         var nodes = mutableListOf<Node>()
-        fun Game_01(inputLines: List<String>, debug: Boolean,slice: Int): Long {
+        fun Game_02(inputLines: List<String>, debug: Boolean): Long {
+            init(inputLines,debug)
+            val neededFreeSpace = FREE_SPACE_NEEDED - (TOTAL_DISK - nodes.find { it.name.equals("/") }?.size!!)
+            println(neededFreeSpace)
+            // find the smallest dir needed to delete
+            return (nodes
+                .filter { it.type==Node.NodeType.DIRECTORY }
+                .filter { it.size>neededFreeSpace }
+                .sortedBy { it.size }.get(0).size)
+
+
+        }
+
+        fun Game_01(inputLines: List<String>, debug: Boolean,): Long {
+            init(inputLines,debug)
+            return nodes.filter { it.type== Node.NodeType.DIRECTORY }.filter { it.size<=SIZE_PARAM }.sumOf { it.size }
+
+        }
+
+        fun init(inputLines: List<String>, debug: Boolean){
             var parent : Node = Node(UUID.randomUUID(), null,null,"/",0,Node.NodeType.DIRECTORY,0)
             nodes = mutableListOf<Node>()
-           // walk the tree
+            // walk the tree
             var depth = 0
             inputLines.forEach { it
                 when {
                     it.startsWith("$ cd ..") ->
                         parent= nodes.filter { it.NodeId==parent.parent }.getOrNull(0)!!
-                        // let's moveUp
+                    // let's moveUp
 
                     (it.startsWith("$ cd ")&&(!(it.startsWith("$ cd ..")))) ->
-                       // set goDeeper
-                      {
-                          parent = Node(UUID.randomUUID(), parent?.NodeId,parent?.name,it.substring(5),0,Node.NodeType.DIRECTORY,
-                              parent.depth+1
-                          )
-                          nodes.add(parent)
+                        // set goDeeper
+                    {
+                        parent = Node(UUID.randomUUID(), parent?.NodeId,parent?.name,it.substring(5),0,Node.NodeType.DIRECTORY,
+                            parent.depth+1
+                        )
+                        nodes.add(parent)
 
-                      }
+                    }
                     it.startsWith("dir ") ->
-                       // list Dirs
+                        // list Dirs
                         null
-               //        nodes.add(Node(UUID.randomUUID(),parent?.NodeId,parent?.name, it.split(" ").get(1),0,Node.NodeType.DIRECTORY,parent.depth))
                     !it.startsWith("$") ->
-                       // file so count
-                       nodes.add(Node(UUID.randomUUID(),parent?.NodeId,parent?.name, it.split(" ").get(1),it.split(" ").get(0).toLong(),Node.NodeType.FILE,parent.depth+1))
+                        // file so count
+                        nodes.add(Node(UUID.randomUUID(),parent?.NodeId,parent?.name, it.split(" ").get(1),it.split(" ").get(0).toLong(),Node.NodeType.FILE,parent.depth+1))
 
                 }
             }
 
-           // println(nodes)
+            if (debug)  println(nodes)
             nodes = sumTheDirs()
-            println(nodes)
-            return nodes.filter { it.type== Node.NodeType.DIRECTORY }.filter { it.size<=100000 }.sumOf { it.size }
+            if (debug) println(nodes)
 
         }
-
 
 
 
