@@ -1,3 +1,5 @@
+package aoc2023
+
 import org.jetbrains.kotlin.util.profile
 
 fun main(args: Array<String>) {

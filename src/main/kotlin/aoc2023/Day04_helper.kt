@@ -1,4 +1,4 @@
-/*
+package aoc2023/*
 * from here https://github.com/Jadarma/advent-of-code-kotlin-solutions/blob/main/solutions/aockt/y2023/Y2023D04.kt
 * but it gives the same....
 * */

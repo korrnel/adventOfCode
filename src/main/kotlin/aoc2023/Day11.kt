@@ -1,3 +1,5 @@
+package aoc2023
+
 import kotlin.math.abs
 
 fun main(args: Array<String>) {

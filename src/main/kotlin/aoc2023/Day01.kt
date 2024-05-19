@@ -1,3 +1,5 @@
+package aoc2023
+
 fun main(args: Array<String>) {
 
         val inputData = Common.getData(1, if (args.size>0) args.get(0) else "dev")

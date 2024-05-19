@@ -1,6 +1,8 @@
+package aoc2023
+
 fun main(args: Array<String>) {
 
-    val inputData = Common.getData(3, args[0])
+    val inputData = Common.Companion.getData(3, args[0])
 
     var inputData1 =
         "467..114...\n" +
@@ -14,11 +16,11 @@ fun main(args: Array<String>) {
                 "...\$.*....\n" +
                 ".664.598..\n" +
                 ""
-    Day03.Game_03(inputData1.split("\n"),false)
-    Day03.Game_03_02(inputData1.split("\n"),false)
+    aoc2023.Day03.Companion.Game_03(inputData1.split("\n"), false)
+    aoc2023.Day03.Companion.Game_03_02(inputData1.split("\n"), false)
 
-    Day03.Game_03(inputData.split("\n"),false)
-    Day03.Game_03_02(inputData.split("\n"),false)
+    aoc2023.Day03.Companion.Game_03(inputData.split("\n"), false)
+    aoc2023.Day03.Companion.Game_03_02(inputData.split("\n"), false)
 }
 class Day03 {
     companion object {
@@ -29,7 +31,7 @@ class Day03 {
     fun Game_03_02(inputLines: List<String>, debug : Boolean) {
         // find the numbers connected with an asterix * and multiply them
         var sum = 0
-        var numbers = mutableListOf<FoundOne>()
+        var numbers = mutableListOf<aoc2023.Day03.Companion.FoundOne>()
         // collect numbers
         inputLines.forEachIndexed { i, it ->
             var number = ""
@@ -43,7 +45,12 @@ class Day03 {
                 }
                 if (!(it2.isDigit()) or (j == it.length - 1)) {
                     if (start > -1) {
-                        numbers.add(FoundOne(number, getArea(i,j,number)))
+                        numbers.add(
+                            aoc2023.Day03.Companion.FoundOne(
+                                number,
+                                aoc2023.Day03.Companion.getArea(i, j, number)
+                            )
+                        )
                         if (debug) {
                             println("at line" + i + " -- " + number)
                         }
@@ -124,7 +131,7 @@ class Day03 {
                             print("at line" + i + " -- " + number)
                         }
                         // is near a symbol
-                        if (isAPart(i, start, j, inputLines)) {
+                        if (aoc2023.Day03.Companion.isAPart(i, start, j, inputLines)) {
                             if (debug) {
                                 print(" - PART ")
                             }

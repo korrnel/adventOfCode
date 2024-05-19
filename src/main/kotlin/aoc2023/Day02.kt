@@ -1,3 +1,5 @@
+package aoc2023
+
 fun main(args: Array<String>) {
 
     val inputData = Common.getData(2, args[0])

@@ -1,3 +1,5 @@
+package aoc2023
+
 import java.util.*
 
 fun main(args: Array<String>) {
