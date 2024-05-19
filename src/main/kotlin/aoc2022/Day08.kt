@@ -20,8 +20,9 @@ fun  main(args: Array<String>) {
     println( Day08.Game_01(inputData.trim(), false))
 
 // part 2  - how many trees are visible from inside of the grid from a tree house
-    println( Day08.Game_02(inputData1.trim(), false))
-    println( Day08.Game_02(inputData.trim(), false))
+  //  println( Day08.Game_02(inputData1.trim(), false))
+    println( Day08.Game_02(inputData.trim(), true))
+
 
 
 }
@@ -32,8 +33,8 @@ class Day08 {
         fun Game_02(inputLines: String,debug: Boolean): Int {
             var map = inputLines.split("\n").map { it.trim().split("") }
             var scores = mutableMapOf<Pair<Int,Int>,Int>()
-
-            map.forEachIndexed { row, strings ->
+            println(map[0])
+            if (1==1) map.forEachIndexed { row, strings ->
                 strings.forEachIndexed { column, s ->
                         try {
                             scores.put(Pair(row,column),getScore(row,column,s.toInt(),map))
@@ -42,39 +43,42 @@ class Day08 {
                         }
                     }
             }
-            println(scores)
+            if (debug) println(scores)
+
+            if (debug) println(map[1][10].toInt())
+            if (debug) println(getScore(1,10,map[1][10].toInt(),map))
             return scores.values.max()
         }
 
         private fun getScore(row: Int, column: Int, treeHouse: Int, map : List<List<String>>): Int {
-            // go right
+            // go left
             var sum = 1
             var visible = 0
-            for (col in (0 until column-1).reversed() ) {
+            for (col in (1 until column).reversed() ) { // it starts with  empty col
                 visible++
                 try {
                     if (map[row][col].toInt()>=treeHouse) break
                 } catch (e: NumberFormatException)
                 {
-                    null
+                    break
                 }
             }
-            sum*= visible
-
-            // go left
+            // println(visible)
+            if (visible>0) sum*= visible
+            // go right
             visible = 0
-            for (col in (column+1 until map[row].size) ) {
+            for (col in (column+1 until map[row].size-1) ) { // it ends with an empty col
                 visible++
                 try {
                     if (map[row][col].toInt()>=treeHouse) break
                 } catch (e: NumberFormatException)
                 {
-                    null
+                    break
                 }
 
             }
-            sum*= visible
-
+            // println(visible)
+            if (visible>0) sum*= visible
             // go down
             visible = 0
             for (r in (row+1 until map.size) ) {
@@ -83,27 +87,28 @@ class Day08 {
                     if (map[r][column].toInt()>=treeHouse) break
                 } catch (e: NumberFormatException)
                 {
-                    null
+                    break
                 }
 
             }
-            sum*= visible
-
+            // println(visible)
+            if (visible>0) sum*= visible
             // go up
             visible = 0
-            for (r in (0 until row-1 ).reversed() ) {
+            for (r in (0 until row ).reversed() ) {
                 visible++
                 try {
                     if (map[r][column].toInt()>=treeHouse) break
                 } catch (e: NumberFormatException)
                 {
-                    null
+                    break
                 }
 
             }
-            sum*= visible
-
-            return  sum
+            // println(visible)
+            if (visible>0) sum*= visible
+            // println(row.toString() + " " + column.toString() + " " + map[row][column].toInt() + " " + sum.toString())
+            return sum
 
         }
 
