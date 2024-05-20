@@ -3,7 +3,7 @@ package aoc2022
 
 
 fun  main(args: Array<String>) {
-// rock paper scissor
+// Tuning Trouble
     val inputData = Common.getData(6, if (args.size > 0) args.get(0) else "dev", "2022")
     val inputData1 = "mjqjpqmgbljsphdztnvjfqwrcgsmlb" // 7
     val inputData2 = "bvwbjplbgvbhsrlpgdmjqwftvncz" // 5

@@ -6,7 +6,7 @@ import java.util.UUID
 
 
 fun  main(args: Array<String>) {
-// rock paper scissor
+// file sizes
     val inputData = Common.getData(7, if (args.size > 0) args.get(0) else "dev", "2022")
     val inputData1 = "\$ cd /\n" +
             "\$ ls\n" +

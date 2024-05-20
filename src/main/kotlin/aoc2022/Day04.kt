@@ -3,7 +3,7 @@ package aoc2022
 import org.jetbrains.kotlin.backend.common.lower.rangeContainsLoweringPhase
 
 fun  main(args: Array<String>) {
-// rock paper scissor
+// camp cleanup
     val inputData = Common.getData(4, if (args.size > 0) args.get(0) else "dev", "2022")
     val inputData1 = "2-4,6-8\n" +
             "2-3,4-5\n" +

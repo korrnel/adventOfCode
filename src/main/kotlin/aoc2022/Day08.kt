@@ -7,7 +7,7 @@ import kotlin.math.sign
 
 
 fun  main(args: Array<String>) {
-// rock paper scissor
+// trees
     val inputData = Common.getData(8, if (args.size > 0) args.get(0) else "dev", "2022")
     val inputData1 = "30373\n" +
             "25512\n" +
