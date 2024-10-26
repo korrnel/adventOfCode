@@ -24,7 +24,8 @@ class Common {
                 .header("Cookie", env?.Cookie ?: "")
                 .build()
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-            return  response.body()
+             if (response.statusCode()==200 ) return  response.body()
+            throw Exception("Error in the request, check cookies : " + response.statusCode())
 
          }
         }
